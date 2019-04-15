@@ -1,0 +1,24 @@
+{% extends "questionnaire/base.html" %}
+{% block body_block %}
+<form method="POST" action="{% url 'questionnaire:create' %}">
+    {% csrf_token %}
+    <div>
+        <label for="id_questionnaire_title">問卷標題：</label><input type="text" required name="questionnaire_title" id="id_questionnaire_title">
+        <label for="id_questionnaire_description">問卷說明：</label><input type="text" required name="questionnaire_description" id="id_questionnaire_description">
+    </div>
+    <div>
+        <label for="id_question_1_text">問題1：</label><input type="text" required name="question_1_text" id="id_question_1_text">
+        <label for="id_question_1_allowed_mutiple_answers">是否允許多選：</label><input type="checkbox" name="question_1_allowed_mutiple_answers" id="id_question_1_allowed_mutiple_answers">
+        <ul>
+            <li><label for="id_question_1_choice_text_1">選項1</label><input type="text" required name="question_1_choice_text_1" id="id_question_1_choice_text_1"></li>
+            <button type="button" onclick="addChoice(this)" value="question_1_choice_text_1">新增選項</button>
+        </ul>
+    </div>
+    <button type="button" value="question_1" onclick="addQuestion(this)">新增問題</button>
+    <button type="submit">確認送出</button>
+</form>
+{% endblock %}
+{% block script_block %}
+{% load static %}
+<script src="{% static 'js/createQuestionnaire.js' %}"></script>
+{% endblock %}

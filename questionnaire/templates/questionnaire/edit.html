@@ -1,0 +1,31 @@
+{% extends 'questionnaire/base.html' %}
+{% block body_block %}
+{% if is_updated %}
+    <h1>問卷內容已更新。</h1>
+{% endif %}
+    <form action="" method="post">
+        {% csrf_token %}
+        <div>
+            <p><label for="questionnaire_title">問卷標題：</label><input type="text" name="questionnaire_title" value="{{ questionnaire.questionnaire_title }}" id="questionnaire_title"></p>
+            <p><label for="questionnaire_description">問卷說明：</label><input type="text" name="questionnaire_description" value="{{ questionnaire.questionnaire_description }}" id="questionnaire_description"></p>
+        </div>
+        {% for question in questionnaire.question_set.all %}
+        <div>
+            <p>
+                <label for="question_{{ question.id }}_text">問題 {{ forloop.counter }}：</label><input type="text" name="question_{{ question.id }}_text" id="question_{{ question.id }}_text" value="{{ question.question_text }}">
+                <input type="checkbox" name="{{ question.id }}_allowed_mutiple_answers" id="{{ question.id }}_allowed_mutiple_answers" {%if question.is_mutiple_answers %}checked{% endif %} ><label for="{{ question.id }}_allowed_mutiple_answers">是否允許多選</label>
+                <button type="button" value="question_{{ question.id }}_delete" onclick="deleteElement(this)">刪除問題</button>
+            </p>
+            {% for choice in question.choice_set.all %}
+                <p><label for="choice_{{ choice.id }}_text">選項 {{ forloop.counter }}：</label><input type="text" name="choice_{{ choice.id }}_text" id="choice_{{ choice.id }}_text" value="{{ choice.choice_text }}"><button type="button" value="choice_{{ choice.id }}_delete" onclick="deleteElement(this)">刪除選項</button></p>
+            {% endfor %}
+        </div>
+        {% endfor %}
+        <button type="submit">確認修改</button>
+        <a href="{% url 'questionnaire:index' %}">回問卷清單</a>
+    </form>
+{% endblock %}
+{% block script_block %}
+{% load static %}
+<script src="{% static 'js/editQuestionnaire.js' %}"></script>
+{% endblock %}

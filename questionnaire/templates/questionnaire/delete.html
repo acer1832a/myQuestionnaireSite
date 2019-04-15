@@ -1,0 +1,14 @@
+{% extends 'questionnaire/base.html' %}
+{% block body_block %}
+    {% if delete_succeed %}
+    <p>問卷已刪除。</p>
+    {% else %}
+    <p>問卷標題： {{ questionnaire.questionnaire_title }}</p>
+    <p>問卷說明： {{ questionnaire.questionnaire_description }}</p>
+    <form action="" method="post">
+        {% csrf_token %}
+        <button type="submit">確定</button>
+        <input type="button" value="取消" onclick="window.location.replace({% url 'questionnaire:index' %})">
+    </form>
+    {% endif %}
+{% endblock %}

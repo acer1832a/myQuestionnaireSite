@@ -1,0 +1,20 @@
+{% extends "member/base.html" %}
+{% load staticfiles %}
+{% block body_block %}
+  <div class="container">
+    <div class="jumbotron">
+      {% if registered %}
+        <h1>帳號已註冊成功!</h1>
+      {% else %}
+        <h1>註冊帳號</h1>
+        <h3>請填寫註冊表單</h3>
+        <form enctype="multipart/form-data" method="POST">
+          {% csrf_token %}
+          {{ user_form.as_p }}
+          {{ profile_form.as_p }}
+          <input type="submit" name="" value="註冊">
+        </form>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
