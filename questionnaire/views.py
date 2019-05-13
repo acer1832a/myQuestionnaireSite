@@ -1,7 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Questionnaire, Question, Choice
+from .models import Questionnaire, Question, Choice, Questionnaire_Results
+from .forms import Results_form
 
 # Create your views here.
 class Index(View):
@@ -100,3 +101,29 @@ class Edit_Questionnaire(LoginRequiredMixin, View):
         self.is_updated = True
         return render(request, 'questionnaire/edit.html',
                       {'questionnaire': questionnaire, 'is_updated': self.is_updated})
+
+class Fill_out_the_questionnaire(View):
+    def get(self, request, questionnaire_id):
+        qeustionnaire = get_object_or_404(Questionnaire, pk=questionnaire_id)
+        questionnaire_results = Questionnaire_Results()
+        return render(request, 'questionnaire/fillOut.html',
+                      {'questionnaire': qeustionnaire,
+                       'questionnaire_results': questionnaire_results})
+    
+    def post(self, request, questionnaire_id):
+        questionnaire = get_object_or_404(Questionnaire, pk=questionnaire_id)
+        questionnaire_results = Questionnaire_Results()
+        questionnaire_results.questionnaire = questionnaire
+        questionnaire_results.birthday = request.POST['birthday']
+        questionnaire_results.gender = request.POST['gender']
+        questionnaire_results.education = request.POST['education']
+        questionnaire_results.annual_income = request.POST['annual_income']
+        questionnaire_results.save()
+        for key in request.POST.keys():
+            if key.startswith('choice'):
+                choice = Choice.objects.get(pk=key.split('-')[1])
+                questionnaire_results.choice.add(choice)
+        questionnaire_results.save()
+        return render(request, 'questionnaire/fillOut.html',
+                      {'questionnaire': questionnaire,
+                       'questionnaire_results': questionnaire_results})

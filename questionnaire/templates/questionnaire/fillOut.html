@@ -1,0 +1,67 @@
+{% extends 'questionnaire/base.html' %}
+{% block body_block %}
+<div>
+    <p>問卷標題：{{ questionnaire.questionnaire_title }}</p>
+    <p>問卷說明：{{ questionnaire.questionnaire_description }}</p>
+</div>
+<form action="" method="post">
+    {% csrf_token %}
+    <fieldset id="fieldset-basic">
+        <legend>基本資料</legend>
+        <div>   
+            <label class="required" for="id_birthday">生日：</label>
+            <input type="text" name="birthday" required="" id="id_birthday" readonly>
+        </div>
+        <div>
+            <label for="gender">性別</label>
+            <ul>
+            {% for value, text in questionnaire_results.GENDER_CHOICES %}
+                <li>
+                <input type="radio" name="gender" id="id_gender_{{ forloop.counter }}" value="{{ value }}">
+                <label for="id_gender_{{ forloop.counter }}">{{text}}</label>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+        <div>
+            <label for="education">學歷</label>
+            <ul>
+            {% for value, text in questionnaire_results.EDUCATION_CHOICES %}
+                <li>
+                <input type="radio" name="education" id="id_education_{{ forloop.counter }}" value="{{ value }}">
+                <label for="id_education_{{ forloop.counter }}">{{text}}</label>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+        <div>
+            <label for="annual_income">年收入</label>
+            <ul>
+            {% for value, text in questionnaire_results.ANNUAL_INCOME_CHOICES %}
+                <li>
+                <input type="radio" name="annual_income" id="id_annual_income_{{ forloop.counter }}" value="{{ value }}">
+                <label for="id_annual_income_{{ forloop.counter }}">{{text}}</label>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    </fieldset>
+    {% for question in questionnaire.question_set.all %}
+    <fieldset id="fieldset-{{ forloop.counter }}">
+        <legend>問題 {{ forloop.counter }}: {{ question.question_text }}</legend>
+        {% for choice in question.choice_set.all %}
+        {% if question.is_mutiple_answers %}
+        <p><input type="checkbox" name="choice-{{ choice.id }}" id="choice-{{ choice.id }}"><label for="choice-{{ choice.id }}">{{ choice.choice_text }}</label></p>
+        {% else %}
+        <p><input type="radio" name="choice-{{ choice.id }}" id="choice-{{ choice.id }}"><label for="choice-{{ choice.id }}">{{ choice.choice_text }}</label></p>
+        {% endif %}
+        {% endfor %}
+    </fieldset>
+    {% endfor %}
+    <button type="submit">確認送出</button>
+</form>
+{% endblock %}
+{% block script_block %}
+{% load static %}
+<script src="{% static 'js/fillOutFormValidation.js' %}"></script>
+{% endblock %}
