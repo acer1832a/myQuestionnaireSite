@@ -15,9 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from userena import views
+from accounts.forms import SignupFormExtra
 
 urlpatterns = [
-    path('member/', include('member.urls')),
+    path('accounts/signup/', views.signup, {'signup_form': SignupFormExtra, 'template_name': 'accounts/signup_form.html'}),
+    path('accounts/', include('userena.urls')),
     path('questionnaire/', include('questionnaire.urls')),
     path('admin/', admin.site.urls),
+    path('statistics/', include('questionnaireStatistics.urls')),
 ]

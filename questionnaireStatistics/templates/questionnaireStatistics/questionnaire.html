@@ -1,0 +1,31 @@
+{% extends 'questionnaireStatistics/base.html' %}
+{% block body_block %}
+<div id="{{ questionnaire.id }}" class="questionnaire">
+    <p>{{ questionnaire.questionnaire_title}}</p>
+    <p>{{ questionnaire.questionnaire_description}}</p>
+    <p>問卷總數：{{ questionnaire.questionnaire_results_set.count }}</p>
+</div>
+{% for question in questionnaire.question_set.all %}
+    <div>
+        <p>{{ question.question_text }}</p>
+        <canvas id="question-{{ question.id }}" class="question"></canvas>
+    </div>
+{% endfor %}
+<p>問卷樣本基本資料：</p>
+<div>
+    <p>依性別區分：</p>
+    <canvas id="questionnaire-gender-{{ questionnaire.id }}" class="questionnaire-gender"></canvas>
+</div>
+<div>
+    <p>依最高學歷區分：</p>
+    <canvas id="questionnaire-educaton-{{ questionnaire.id }}" class="questionnaire-education"></canvas>
+</div>
+<div>
+    <p>依年收入區分：</p>
+    <canvas id="questionnaire-annual-income-{{ questionnaire.id }}" class="questionnaire-annual-income"></canvas>
+</div>
+{% endblock %}
+{% block script_block %}
+{% load static %}
+<script src="{% static 'js/statistics.js' %}"></script>
+{% endblock %}
