@@ -1,19 +1,33 @@
-{% extends 'questionnaire/base.html' %}
+{% extends 'base.html' %}
 {% block body_block %}
 {% if user.is_authenticated %}
     {% if questionnaire_list %}
         {% for questionnaire in questionnaire_list %}
-            <p>{{ forloop.counter }}. {{ questionnaire.questionnaire_title }}</p>
-            <P>{{ questionnaire.questionnaire_description }}</P>
-            <p><a href="/questionnaire/{{ questionnaire.id }}/edit/">修改</a>
-            <a href="/questionnaire/{{ questionnaire.id }}/delete">刪除</a></p>
+        <div class="panel panel-primary">
+            <div class="panel-heading">{{ forloop.counter }}. {{ questionnaire.questionnaire_title }}</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-12">{{ questionnaire.questionnaire_description }}</div>
+                </div>
+                <div class="row">    
+                    <div class="col-sm-1">
+                        <a href="{% url 'questionnaire:edit' questionnaire.id %}" class="btn btn-info" role="button">修改</a>
+                    </div>
+                    <div class="col-sm-1">
+                        <a href="{% url 'questionnaire:delete' questionnaire.id %}" class="btn btn-warning" role="button">刪除</a>
+                    </div>
+                </div>
+            </div>
+        </div>
         {% endfor %}
     {% else %}
         <p>尚未新增任何問卷</p>
     {% endif %}
-    <p><a href="{% url 'questionnaire:create' %}">按此新增問卷</a></p>
+    <a href="{% url 'questionnaire:create' %}" class="btn btn-lg btn-primary" role="button">按此新增問卷</a>
 {% else %}
-    <p>請先登入</p>
-    <p><a href="{% url 'userena_signin' %}">登入</a></p>
+    <div class="page-header">
+        <h2>請先登入</h2>
+    </div>
+    <p><a href="{% url 'userena_signin' %}" class="btn btn-default" role="button">登入</a></p>
 {% endif %}
 {% endblock %}

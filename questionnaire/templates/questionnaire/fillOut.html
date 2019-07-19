@@ -1,67 +1,76 @@
-{% extends 'questionnaire/base.html' %}
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock %}
 {% block body_block %}
 <div>
     <p>問卷標題：{{ questionnaire.questionnaire_title }}</p>
     <p>問卷說明：{{ questionnaire.questionnaire_description }}</p>
 </div>
-<form action="" method="post">
+<form action="" method="post" class="form-horizontal">
     {% csrf_token %}
-    <fieldset id="fieldset-basic">
-        <legend>基本資料</legend>
-        <div>   
-            <label class="required" for="id_birthday">生日：</label>
-            <input type="text" name="birthday" required="" id="id_birthday" readonly>
+    <div class="panel panel-info">
+        <div class="panel-heading">基本資料</div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label class="control-label col-sm-1" for="id_birthday">生日</label>
+                <div class="col-sm-2">
+                    <input type="text" name="birthday" required id="id_birthday" class="form-control" readonly>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="gender" class="col-sm-1 control-label">性別</label>
+                <div class="col-sm-2">
+                    <select name="gender" id="gender" class="form-control" required>
+                        <option>請選擇</option>
+                    {% for value, text in questionnaire_results.GENDER_CHOICES %}
+                        <option value="{{ value }}">{{ text }}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="education" class="col-sm-1 control-label">學歷</label>
+                <div class="col-sm-2">
+                    <select name="education" id="education" class="form-control">
+                        <option>請選擇</option>
+                    {% for value, text in questionnaire_results.EDUCATION_CHOICES %}
+                        <option value="{{ value }}">{{ text }}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="annual_income" class="required col-sm-1 control-label">年收入</label>
+                <div class="col-sm-2">
+                    <select name="annual_income" id="annual_income" class="form-control">
+                        <option>請選擇</option>
+                    {% for value, text in questionnaire_results.ANNUAL_INCOME_CHOICES %}
+                        <option value="{{ value }}">{{ text }}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+            </div>
         </div>
-        <div>
-            <label for="gender">性別</label>
-            <ul>
-            {% for value, text in questionnaire_results.GENDER_CHOICES %}
-                <li>
-                <input type="radio" name="gender" id="id_gender_{{ forloop.counter }}" value="{{ value }}">
-                <label for="id_gender_{{ forloop.counter }}">{{text}}</label>
-                </li>
-            {% endfor %}
-            </ul>
-        </div>
-        <div>
-            <label for="education">學歷</label>
-            <ul>
-            {% for value, text in questionnaire_results.EDUCATION_CHOICES %}
-                <li>
-                <input type="radio" name="education" id="id_education_{{ forloop.counter }}" value="{{ value }}">
-                <label for="id_education_{{ forloop.counter }}">{{text}}</label>
-                </li>
-            {% endfor %}
-            </ul>
-        </div>
-        <div>
-            <label for="annual_income">年收入</label>
-            <ul>
-            {% for value, text in questionnaire_results.ANNUAL_INCOME_CHOICES %}
-                <li>
-                <input type="radio" name="annual_income" id="id_annual_income_{{ forloop.counter }}" value="{{ value }}">
-                <label for="id_annual_income_{{ forloop.counter }}">{{text}}</label>
-                </li>
-            {% endfor %}
-            </ul>
-        </div>
-    </fieldset>
+    </div>
     {% for question in questionnaire.question_set.all %}
-    <fieldset id="fieldset-{{ forloop.counter }}">
-        <legend>問題 {{ forloop.counter }}: {{ question.question_text }}</legend>
+    <ul class="list-group">
+        <li class="list-group-item active"><label>問題 {{ forloop.counter }}: {{ question.question_text }}</label></li>
         {% for choice in question.choice_set.all %}
         {% if question.is_mutiple_answers %}
-        <p><input type="checkbox" name="choice-{{ choice.id }}" id="choice-{{ choice.id }}"><label for="choice-{{ choice.id }}">{{ choice.choice_text }}</label></p>
+        <li class="list-group-item"><input type="checkbox" name="choice-{{ choice.id }}" id="choice-{{ choice.id }}" value="{{ choice.id }}"><label for="choice-{{ choice.id }}">{{ choice.choice_text }}</label></li>
         {% else %}
-        <p><input type="radio" name="choice-{{ choice.id }}" id="choice-{{ choice.id }}"><label for="choice-{{ choice.id }}">{{ choice.choice_text }}</label></p>
+        <li class="list-group-item"><input type="radio" name="question-{{ question.id }}-choice" id="choice-{{ choice.id }}" value="{{ choice.id }}"><label for="choice-{{ choice.id }}">{{ choice.choice_text }}</label></li>
         {% endif %}
         {% endfor %}
-    </fieldset>
+    </ul>
     {% endfor %}
-    <button type="submit">確認送出</button>
+    <div class="form-group">
+        <button type="submit" class="btn btn-success">確認送出</button>
+    </div>
 </form>
 {% endblock %}
 {% block script_block %}
-{% load static %}
 <script src="{% static 'js/fillOutFormValidation.js' %}"></script>
 {% endblock %}

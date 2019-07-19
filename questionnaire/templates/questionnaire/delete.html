@@ -1,14 +1,27 @@
 {% extends 'questionnaire/base.html' %}
 {% block body_block %}
     {% if delete_succeed %}
-    <p>問卷已刪除。</p>
+    <div class="page-header">
+        <h1>問卷已刪除。</h1>
+    </div>
     {% else %}
-    <p>問卷標題： {{ questionnaire.questionnaire_title }}</p>
-    <p>問卷說明： {{ questionnaire.questionnaire_description }}</p>
+    <div class="page-header">
+        <h1>刪除問卷會一併刪除問卷結果，你確定要刪除此問卷?</h1>
+    </div>
+    <div class="row">
+        <div class="col-sm-10">
+            <p>問卷標題： {{ questionnaire.questionnaire_title }}</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-10">
+            <p>問卷說明： {{ questionnaire.questionnaire_description }}</p>
+        </div>
+    </div>
     <form action="" method="post">
         {% csrf_token %}
-        <button type="submit">確定</button>
-        <input type="button" value="取消" onclick="window.location.replace({% url 'questionnaire:index' %})">
+        <button class="btn btn-danger" type="submit">確定</button>
+        <a href="{% url 'questionnaire:index' %}" class="btn btn-default" role="button">取消</a>
     </form>
     {% endif %}
 {% endblock %}
