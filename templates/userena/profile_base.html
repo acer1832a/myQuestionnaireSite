@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block profile_navigation %}
+    {% url 'userena_profile_detail' user.username as profile_detail_url %}
+    {% url 'userena_profile_edit' user.username as profile_edit_url %}
+    {% url 'userena_password_change' user.username as password_change_url %}
+    {% url 'userena_email_change' user.username as email_change_url %}
+    {% if user.username == profile.user.username %}
+      <ul class="nav nav-tabs">         
+        <li {% if request.get_full_path == profile_detail_url %}class="active"{% endif %}><a href="{{ profile_detail_url }}">{% trans "View profile" %}</a></li>
+        <li {% if request.get_full_path == profile_edit_url %}class="active"{% endif %}><a href="{{ profile_edit_url }}">{% trans "Edit details" %}</a></li>
+        <li {% if request.get_full_path == password_change_url %}class="active"{% endif %}><a href="{{ password_change_url }}">{% trans "Change password" %}</a></li>
+        <li {% if request.get_full_path == email_change_url %}class="active"{% endif %}><a href="{{ email_change_url }}">{% trans "Change email" %}</a></li>
+      </ul>
+    {% endif %}
+{% endblock %}

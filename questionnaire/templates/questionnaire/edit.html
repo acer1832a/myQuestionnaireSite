@@ -1,28 +1,68 @@
-{% extends 'questionnaire/base.html' %}
+{% extends 'base.html' %}
+{% block css%}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock %}
 {% block body_block %}
 {% if is_updated %}
-    <h1>問卷內容已更新。</h1>
+    <div class="page-header"><h1>問卷內容已更新。</h1></div>
 {% endif %}
-    <form action="" method="post">
+    <form action="" method="post" class="form-horizontal">
         {% csrf_token %}
-        <div>
-            <p><label for="questionnaire_title">問卷標題：</label><input type="text" name="questionnaire_title" value="{{ questionnaire.questionnaire_title }}" id="questionnaire_title"></p>
-            <p><label for="questionnaire_description">問卷說明：</label><input type="text" name="questionnaire_description" value="{{ questionnaire.questionnaire_description }}" id="questionnaire_description"></p>
+        <div class="form-group">
+            <label for="questionnaire_title" class="col-sm-2 control-label">問卷標題：</label>
+            <div class="col-sm-10">
+                <input type="text" name="questionnaire_title" value="{{ questionnaire.questionnaire_title }}" id="questionnaire_title" class="form-control">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="questionnaire_description" class="col-sm-2 control-label">問卷說明：</label>
+            <div class="col-sm-10">
+                <input type="text" name="questionnaire_description" value="{{ questionnaire.questionnaire_description }}" id="questionnaire_description" class="form-control">
+            </div>
         </div>
         {% for question in questionnaire.question_set.all %}
-        <div>
-            <p>
-                <label for="question_{{ question.id }}_text">問題 {{ forloop.counter }}：</label><input type="text" name="question_{{ question.id }}_text" id="question_{{ question.id }}_text" value="{{ question.question_text }}">
-                <input type="checkbox" name="{{ question.id }}_allowed_mutiple_answers" id="{{ question.id }}_allowed_mutiple_answers" {%if question.is_mutiple_answers %}checked{% endif %} ><label for="{{ question.id }}_allowed_mutiple_answers">是否允許多選</label>
-                <button type="button" value="question_{{ question.id }}_delete" onclick="deleteElement(this)">刪除問題</button>
-            </p>
-            {% for choice in question.choice_set.all %}
-                <p><label for="choice_{{ choice.id }}_text">選項 {{ forloop.counter }}：</label><input type="text" name="choice_{{ choice.id }}_text" id="choice_{{ choice.id }}_text" value="{{ choice.choice_text }}"><button type="button" value="choice_{{ choice.id }}_delete" onclick="deleteElement(this)">刪除選項</button></p>
-            {% endfor %}
+        <div class="form-group" id="question_{{ question.id }}">
+            <div class="col-sm-offset-2 col-sm-10">
+                <div class="panel panel-default">
+                    <div class="panel-heading">問題 {{ forloop.counter }}</div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="question_{{ question.id }}_text" class="control-label col-sm-2">問題內容：</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="question_{{ question.id }}_text" id="question_{{ question.id }}_text" value="{{ question.question_text }}" class="form-control">
+                            </div>
+                            <div class="col-sm-1">
+                                <button type="button" value="question_{{ question.id }}_delete" onclick="deleteElement(this)" class="btn btn-danger">刪除問題</button>
+                            </div>
+                            <div class="col-sm-offset-2 col-sm-6 checkbox">
+                                <label for="{{ question.id }}_allowed_mutiple_answers"><input type="checkbox" name="{{ question.id }}_allowed_mutiple_answers" id="{{ question.id }}_allowed_mutiple_answers" {%if question.is_mutiple_answers %}checked{% endif %}>是否允許多選</label>
+                            </div>
+                        </div>
+                        {% for choice in question.choice_set.all %}
+                        <div class="form-group" id="choice_{{ choice.id }}">
+                            <label for="choice_{{ choice.id }}_text" class="control-label col-sm-2">選項 {{ forloop.counter }}：</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="choice_{{ choice.id }}_text" id="choice_{{ choice.id }}_text" value="{{ choice.choice_text }}" class="form-control">
+                            </div>
+                            <div class="col-sm-1">
+                                <button type="button" value="choice_{{ choice.id }}_delete" onclick="deleteElement(this)" class="btn btn-warning btn-sm">刪除選項</button>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
         </div>
         {% endfor %}
-        <button type="submit">確認修改</button>
-        <a href="{% url 'questionnaire:index' %}">回問卷清單</a>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-1">
+                <button type="submit" class="btn btn-primary">確認修改</button>
+            </div>
+            <div class="col-sm-1">
+                <a href="{% url 'questionnaire:index' %}" class="btn btn-default" role="button">回問卷清單</a>
+            </div>
+        </div>
     </form>
 {% endblock %}
 {% block script_block %}

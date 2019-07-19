@@ -2,21 +2,25 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Base</title>
-    <!-- Latest compiled and minified CSS -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% block meta %}{% endblock %}
+    {% load static %}
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    {% block css %}{% endblock %}
   </head>
   <body>
     <nav class="navbar navbar-default navbar-static-top">
       <div class="container">
         <ul class="nav navbar-nav">
-          {# Django Home Link / Admin Link / Register Link#}
           <li><a class="navbar-brand" href="{% url 'questionnaire:index' %}">myQuestionnaire</a></li>
           <li><a class="navbar-link" href="{% url 'admin:index' %}">管理者登入</a></li>     
-          {# Some logic on what to display for last item#}
           {% if user.is_authenticated %}
-            <li><a href="{% url 'userena_signout' %}">登出</a></li>
+            <li><a class="navbar-link" href="{% url 'userena_profile_detail' user.username %}">個人設定</a></li>
+            <li><a class="navbar-link" href="{% url 'userena_signout' %}">登出</a></li>
           {% else %}
             <li><a class="navbar-link" href="{% url 'userena_signup' %}">註冊</a></li>
             <li><a class="navbar-link" href="{% url 'userena_signin' %}">登入</a></li>
@@ -25,11 +29,15 @@
       </div>
     </nav>
     <div class="container">
+    {% block profile_navigation %}
+    {% endblock %}
+    {% block body_title %}{% endblock %}
     {% block body_block %}
     {% endblock %}
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     {% block script_block %}
     {% endblock %}
   </body>

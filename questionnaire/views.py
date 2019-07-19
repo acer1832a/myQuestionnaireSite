@@ -120,8 +120,8 @@ class Fill_out_the_questionnaire(View):
         questionnaire_results.annual_income = request.POST['annual_income']
         questionnaire_results.save()
         for key in request.POST.keys():
-            if key.startswith('choice'):
-                choice = Choice.objects.get(pk=key.split('-')[1])
+            if 'choice' in key:
+                choice = Choice.objects.get(pk=request.POST.get(key))
                 questionnaire_results.choice.add(choice)
         questionnaire_results.save()
         return render(request, 'questionnaire/fillOut.html',

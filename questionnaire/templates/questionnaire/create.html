@@ -1,21 +1,52 @@
-{% extends "questionnaire/base.html" %}
+{% extends "base.html" %}
 {% block body_block %}
-<form method="POST" action="{% url 'questionnaire:create' %}">
+<form method="POST" action="{% url 'questionnaire:create' %}" class="form-horizontal">
     {% csrf_token %}
-    <div>
-        <label for="id_questionnaire_title">問卷標題：</label><input type="text" required name="questionnaire_title" id="id_questionnaire_title">
-        <label for="id_questionnaire_description">問卷說明：</label><input type="text" required name="questionnaire_description" id="id_questionnaire_description">
+    <div class="form-group">
+        <label for="id_questionnaire_title" class="col-sm-2 control-label">問卷標題：</label>
+        <div class="col-sm-10">
+            <input type="text" required name="questionnaire_title" id="id_questionnaire_title" class="form-control">
+        </div>
     </div>
-    <div>
-        <label for="id_question_1_text">問題1：</label><input type="text" required name="question_1_text" id="id_question_1_text">
-        <label for="id_question_1_allowed_mutiple_answers">是否允許多選：</label><input type="checkbox" name="question_1_allowed_mutiple_answers" id="id_question_1_allowed_mutiple_answers">
-        <ul>
-            <li><label for="id_question_1_choice_text_1">選項1</label><input type="text" required name="question_1_choice_text_1" id="id_question_1_choice_text_1"></li>
-            <button type="button" onclick="addChoice(this)" value="question_1_choice_text_1">新增選項</button>
-        </ul>
+    <div class="form-group">
+        <label for="id_questionnaire_description" class="control-label col-sm-2">問卷說明：</label>
+        <div class="col-sm-10">
+            <input type="text" required name="questionnaire_description" id="id_questionnaire_description" class="form-control">
+        </div>
     </div>
-    <button type="button" value="question_1" onclick="addQuestion(this)">新增問題</button>
-    <button type="submit">確認送出</button>
+    <div class="form-group" id="question_1">
+        <div class="col-sm-offset-2 col-sm-10">
+            <div class="panel panel-default">
+                <div class="panel-heading">問題1</div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="id_question_1_text" class="control-label col-sm-2">問題內容</label>
+                        <div class="col-sm-8">
+                            <input type="text" required name="question_1_text" id="id_question_1_text" class="form-control">
+                        </div>
+                        <div class="checkbox col-sm-2">
+                            <label for="id_question_1_allowed_mutiple_answers"><input type="checkbox" name="question_1_allowed_mutiple_answers" id="id_question_1_allowed_mutiple_answers">是否允許多選</label> 
+                        </div>
+                    </div>
+                    <div class="form-group" id="group_question_1_choice_text_1">
+                        <label for="id_question_1_choice_text_1" class="control-label col-sm-2">選項1</label>
+                        <div class="col-sm-10">
+                            <input type="text" required name="question_1_choice_text_1" id="id_question_1_choice_text_1" class="form-control">
+                        </div>
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="button" onclick="addChoice(this)" value="question_1_choice_text_1"  class="btn btn-success">新增選項</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="button" value="question_1" onclick="addQuestion(this)" class="btn btn-info">新增問題</button>
+            <button type="submit" class="btn btn-primary">確認送出</button>
+        </div>
+    </div>
 </form>
 {% endblock %}
 {% block script_block %}

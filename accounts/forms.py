@@ -16,11 +16,6 @@ class SignupFormExtra(SignupForm):
         form instead at the end.
         """
         super(SignupFormExtra, self).__init__(*args, **kw)
-        # Put the first and last name at the top
-        # new_order = self.fields
-        # new_order.move_to_end('last_name', last=False)
-        # new_order.move_to_end('first_name', last=False)
-        # self.fields= new_order
 
     def save(self):
         """
